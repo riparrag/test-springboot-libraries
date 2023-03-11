@@ -3,6 +3,9 @@ package com.ipasoft.demo.services.kafka;
 import java.util.Date;
 import java.util.UUID;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 public abstract class KafkaEvent<T> {
 	private UUID id;
 	private Date date;
@@ -14,6 +17,18 @@ public abstract class KafkaEvent<T> {
 		this.entity = entity;
 		this.setId( UUID.randomUUID() );
 		this.setDate( new Date() );
+	}
+	
+	@Override
+	public String toString() {
+		ObjectMapper mapper = new ObjectMapper();
+		try {
+			return mapper.writeValueAsString(this);
+		}
+		catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
+		return "error in toString";
 	}
 	
 	public UUID getId() {

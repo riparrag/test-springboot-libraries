@@ -1,0 +1,292 @@
+openapi: 3.0.1
+info:
+    title: Ipa Api
+    version: 6.6.6
+    description: ipasoft api
+    license:
+        name: ipasoft S.R.L
+servers:
+    -
+        url: 'http://localhost:8080'
+        description: Generated server url
+paths:
+    '/students/{id}':
+        get:
+            tags:
+                - student-redis-controller
+            parameters:
+                -
+                    examples:
+                        id 1:
+                            value: ejemplo tu vieja
+                    name: id
+                    description: id en redis
+                    schema:
+                        type: string
+                    in: path
+                    required: true
+            responses:
+                '200':
+                    content:
+                        '*/*':
+                            schema:
+                                $ref: '#/components/schemas/ResponseApiEntityBaseDTOStudentRedis'
+                    description: encontrado xitosamente papurri!
+                '404':
+                    content:
+                        '*/*':
+                            schema:
+                                $ref: '#/components/schemas/ResponseApiEntityBaseDTOStudentRedis'
+                    description: no te lo encuentra mocho!
+                '500':
+                    content:
+                        '*/*':
+                            schema:
+                                $ref: '#/components/schemas/ResponseApiEntityBaseDTOStudentRedis'
+                    description: pinchó atroden
+            operationId: findById
+            summary: Gets a student by id from redis
+            description: Description of this method by ipasoft 3.0
+        put:
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/StudentRedis'
+                required: true
+            tags:
+                - student-redis-controller
+            parameters:
+                -
+                    name: id
+                    schema:
+                        type: string
+                    in: path
+                    required: true
+            responses:
+                '200':
+                    description: OK
+            operationId: updateStudent
+        delete:
+            tags:
+                - student-redis-controller
+            parameters:
+                -
+                    name: id
+                    schema:
+                        type: string
+                    in: path
+                    required: true
+            responses:
+                '200':
+                    description: OK
+            operationId: delete
+    '/clients/update/{idClient}':
+        put:
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/Client'
+                required: true
+            tags:
+                - client-controller
+            parameters:
+                -
+                    name: idClient
+                    schema:
+                        format: uuid
+                        type: string
+                    in: path
+                    required: true
+            responses:
+                '200':
+                    description: OK
+            operationId: updateClient
+    /students:
+        post:
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/StudentRedis'
+                required: true
+            tags:
+                - student-redis-controller
+            responses:
+                '201':
+                    description: Created
+            operationId: createStudent
+    /clients/create:
+        post:
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/Client'
+                required: true
+            tags:
+                - client-controller
+            responses:
+                '201':
+                    description: Created
+            operationId: createClient
+    /students/get-all:
+        get:
+            tags:
+                - student-redis-controller
+            responses:
+                '200':
+                    content:
+                        '*/*':
+                            schema:
+                                type: object
+                    description: OK
+            operationId: getAll
+    /ipa:
+        get:
+            tags:
+                - ipa-rest-controller
+            responses:
+                '200':
+                    content:
+                        '*/*':
+                            schema:
+                                type: string
+                    description: OK
+            operationId: get
+    /ipa/maca:
+        get:
+            tags:
+                - ipa-rest-controller
+            responses:
+                '200':
+                    content:
+                        '*/*':
+                            schema:
+                                type: string
+                    description: OK
+            operationId: getMaca
+    '/clients/get-by-id/{idClient}':
+        get:
+            tags:
+                - client-controller
+            parameters:
+                -
+                    name: idClient
+                    schema:
+                        format: uuid
+                        type: string
+                    in: path
+                    required: true
+            responses:
+                '200':
+                    content:
+                        '*/*':
+                            schema:
+                                $ref: '#/components/schemas/ResponseApiEntityBaseDTOClient'
+                    description: OK
+            operationId: getById
+    '/clients/get-by-email/{email}':
+        get:
+            tags:
+                - client-controller
+            parameters:
+                -
+                    name: email
+                    schema:
+                        type: string
+                    in: path
+                    required: true
+            responses:
+                '200':
+                    content:
+                        '*/*':
+                            schema:
+                                type: array
+                                items:
+                                    $ref: '#/components/schemas/Client'
+                    description: OK
+            operationId: getById_1
+    /clients/get-all:
+        get:
+            tags:
+                - client-controller
+            responses:
+                '200':
+                    content:
+                        '*/*':
+                            schema:
+                                type: array
+                                items:
+                                    $ref: '#/components/schemas/Client'
+                    description: OK
+            operationId: getAll_1
+    '/clients/delete/{idClient}':
+        delete:
+            tags:
+                - client-controller
+            parameters:
+                -
+                    name: idClient
+                    schema:
+                        format: uuid
+                        type: string
+                    in: path
+                    required: true
+            responses:
+                '200':
+                    description: OK
+            operationId: delete_1
+components:
+    schemas:
+        StudentRedis:
+            type: object
+            properties:
+                id:
+                    type: string
+                name:
+                    type: string
+                gender:
+                    enum:
+                        - MALE
+                        - FEMALE
+                    type: string
+                grade:
+                    format: int32
+                    type: integer
+        Client:
+            type: object
+            properties:
+                id:
+                    format: uuid
+                    type: string
+                name:
+                    type: string
+                surname:
+                    type: string
+                email:
+                    type: string
+                birthDate:
+                    format: date-time
+                    type: string
+        ErrorDataDTO:
+            type: object
+        ResponseApiEntityBaseDTOStudentRedis:
+            type: object
+            properties:
+                data:
+                    $ref: '#/components/schemas/StudentRedis'
+                errorsInitialited:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/ErrorDataDTO'
+        ResponseApiEntityBaseDTOClient:
+            type: object
+            properties:
+                data:
+                    $ref: '#/components/schemas/Client'
+                errorsInitialited:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/ErrorDataDTO'
